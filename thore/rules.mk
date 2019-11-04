@@ -1,5 +1,14 @@
-# Set any rules.mk overrides for your specific keymap here.
-# See rules at https://docs.qmk.fm/#/config_options?id=the-rulesmk-file
-LINK_TIME_OPTIMIZATION_ENABLE = yes
+# Explicitly disable all not used features to reduce size.
+BOOTMAGIC_ENABLE = no
+MOUSEKEY_ENABLE = no
+EXTRAKEY_ENABLE = no
+CONSOLE_ENABLE = no
 COMMAND_ENABLE = no
+COMBO_ENABLE = no
+NKRO_ENABLE = no
+AUDIO_ENABLE = no
+RGBLIGHT_ENABLE = yes
+LEADER_ENABLE = no
+UNICODE_ENABLE = yes
+LINK_TIME_OPTIMIZATION_ENABLE = yes
 TAP_DANCE_ENABLE = yes

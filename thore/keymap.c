@@ -1,236 +1,208 @@
 #include QMK_KEYBOARD_H
-#include "version.h"
-
-// Custom key names
-#define MOD_TMUX LALT(KC_GRAVE)
-#define SUPER MOD_LGUI
 
 enum layer_names {
   LAYER_BASE  = 0,
-  LAYER_ARROW,
-  LAYER_MOUSE,
+  LAYER_SYMBOLS,
+  LAYER_NUMBERS,
 };
 
 enum custom_keycodes {
-  RGB_SLD = EZ_SAFE_RANGE,
+  ESCAPE_SHIFT   = SFT_T(KC_ESCAPE),
+  DELETE_SHIFT   = SFT_T(KC_DELETE),
+  /* GUI_CONTROL      = MT(MOD_LALT, OSM(MOD_LGUI)), */
+  /* TMUX_ALT   = MT(MOD_LCTL, LALT(KC_GRAVE)), */
+  SPACE_SYMBOLS  = LT(LAYER_SYMBOLS, KC_SPACE),
+  BSPACE_SYMBOLS = LT(LAYER_SYMBOLS, KC_BSPACE),
+  ENTER_NUMBERS  = LT(LAYER_NUMBERS, KC_ENTER),
+  TAB_NUMBERS    = LT(LAYER_NUMBERS, KC_TAB),
 };
 
 enum tab_dance_codes {
-  TD_A = 0,
-  TD_B,
-  TD_C,
-  TD_D,
-  TD_E,
-  TD_F,
-  TD_G,
-  TD_H,
-  TD_I,
-  TD_J,
-  TD_K,
-  TD_L,
-  TD_M,
-  TD_N,
-  TD_O,
-  TD_P,
-  TD_Q,
-  TD_R,
-  TD_S,
-  TD_T,
-  TD_U,
-  TD_V,
-  TD_W,
-  TD_X,
-  TD_Y,
-  TD_Z,
-  TD_SCOLON,
-  TD_SLASH,
-  TD_COMMA,
-  TD_DOT,
-  TD_TMUX,
+  // Basic
+  AE = 0,
+  OE,
+  UE,
+  SS,
+
+  // Advanced
+  GUI_CONTROL,
+  TMUX_ALT,
 };
 
-// To keep this list always complete, not used keys are dancing with themselves.
-// The idea is that they can be statically used in the layout and only the
-// alternative key code must be edited here.
+typedef enum {
+    SINGLE_TAP,
+    SINGLE_HOLD,
+} td_state_t;
 
+static td_state_t td_state;
+int cur_dance (qk_tap_dance_state_t *state);
+
+// Finished and reset functions for advanced tap dance keycodes.
+void gui_control_finished (qk_tap_dance_state_t *state, void *user_data);
+void gui_control_reset (qk_tap_dance_state_t *state, void *user_data);
+
+void tmux_alt_finished (qk_tap_dance_state_t *state, void *user_data);
+void tmux_alt_reset (qk_tap_dance_state_t *state, void *user_data);
+
+int cur_dance (qk_tap_dance_state_t *state) {
+  if (state->count == 1) {
+    if (state->interrupted || !state->pressed) { return SINGLE_TAP; }
+    else { return SINGLE_HOLD; }
+  }
+  else { return 2; }
+};
+
+void gui_control_finished (qk_tap_dance_state_t *state, void *user_data) {
+  td_state = cur_dance(state);
+  switch (td_state) {
+    case SINGLE_TAP:
+      set_oneshot_mods(MOD_BIT(KC_LGUI));
+      break;
+    case SINGLE_HOLD:
+      register_mods(MOD_BIT(KC_LCTL));
+      break;
+  }
+};
+
+void gui_control_reset (qk_tap_dance_state_t *state, void *user_data) {
+  switch (td_state) {
+    case SINGLE_TAP:
+      clear_oneshot_mods();
+      break;
+    case SINGLE_HOLD:
+      unregister_mods(MOD_BIT(KC_LCTL));
+      break;
+  }
+};
+
+
+
+void tmux_alt_finished (qk_tap_dance_state_t *state, void *user_data) {
+  td_state = cur_dance(state);
+
+  switch (td_state) {
+    case SINGLE_TAP:
+      register_mods(MOD_BIT(KC_LALT));
+      register_code16(KC_GRAVE);
+      break;
+
+    case SINGLE_HOLD:
+      register_mods(MOD_BIT(KC_LALT));
+      break;
+  }
+};
+
+void tmux_alt_reset (qk_tap_dance_state_t *state, void *user_data) {
+  switch (td_state) {
+    case SINGLE_TAP:
+      unregister_mods(MOD_BIT(KC_LALT));
+      unregister_code16(KC_GRAVE);
+      break;
+    case SINGLE_HOLD:
+      unregister_mods(MOD_BIT(KC_LALT));
+      break;
+  }
+};
+
+// TODO: use shiftable unicodes with XT()
 qk_tap_dance_action_t tap_dance_actions[] = {
-[TD_A]      = ACTION_TAP_DANCE_DOUBLE(KC_A, KC_GRAVE), // A `
-[TD_B]      = ACTION_TAP_DANCE_DOUBLE(KC_B, KC_B), // B B
-[TD_C]      = ACTION_TAP_DANCE_DOUBLE(KC_C, KC_BSLASH), // C 
-[TD_D]      = ACTION_TAP_DANCE_DOUBLE(KC_D, KC_LBRACKET), // D [
-[TD_E]      = ACTION_TAP_DANCE_DOUBLE(KC_E, KC_HASH), // E #
-[TD_F]      = ACTION_TAP_DANCE_DOUBLE(KC_F, KC_LPRN), // F (
-[TD_G]      = ACTION_TAP_DANCE_DOUBLE(KC_G, KC_LABK), // G <
-[TD_H]      = ACTION_TAP_DANCE_DOUBLE(KC_H, KC_RABK), // H >
-[TD_I]      = ACTION_TAP_DANCE_DOUBLE(KC_I, KC_ASTR), // I *
-[TD_J]      = ACTION_TAP_DANCE_DOUBLE(KC_J, KC_RPRN), // J )
-[TD_K]      = ACTION_TAP_DANCE_DOUBLE(KC_K, KC_RBRACKET), // K ]
-[TD_L]      = ACTION_TAP_DANCE_DOUBLE(KC_L, KC_RCBR), // L }
-[TD_M]      = ACTION_TAP_DANCE_DOUBLE(KC_M, KC_DQUO), // M "
-[TD_N]      = ACTION_TAP_DANCE_DOUBLE(KC_N, KC_N), // N N
-[TD_O]      = ACTION_TAP_DANCE_DOUBLE(KC_O, KC_KP_MINUS), // O -
-[TD_P]      = ACTION_TAP_DANCE_DOUBLE(KC_P, KC_UNDS), // P _
-[TD_Q]      = ACTION_TAP_DANCE_DOUBLE(KC_Q, KC_EXCLAIM), // Q !
-[TD_R]      = ACTION_TAP_DANCE_DOUBLE(KC_R, KC_DLR), // R $
-[TD_S]      = ACTION_TAP_DANCE_DOUBLE(KC_S, KC_LCBR), // S {
-[TD_T]      = ACTION_TAP_DANCE_DOUBLE(KC_T, KC_PERC), // T %
-[TD_U]      = ACTION_TAP_DANCE_DOUBLE(KC_U, KC_AMPR), // U &
-[TD_V]      = ACTION_TAP_DANCE_DOUBLE(KC_V, KC_QUOTE), // V '
-[TD_W]      = ACTION_TAP_DANCE_DOUBLE(KC_W, KC_AT), // W @
-[TD_X]      = ACTION_TAP_DANCE_DOUBLE(KC_X, KC_PIPE), // X |
-[TD_Y]      = ACTION_TAP_DANCE_DOUBLE(KC_Y, KC_CIRC), // Y ^
-[TD_Z]      = ACTION_TAP_DANCE_DOUBLE(KC_Z, KC_TILD), // Z ~
-[TD_SCOLON] = ACTION_TAP_DANCE_DOUBLE(KC_SCOLON, KC_COLON), // ; :
-[TD_SLASH]  = ACTION_TAP_DANCE_DOUBLE(KC_SLASH, KC_QUESTION), // / ?
-[TD_COMMA]  = ACTION_TAP_DANCE_DOUBLE(KC_COMMA, KC_PLUS), // , +
-[TD_DOT]    = ACTION_TAP_DANCE_DOUBLE(KC_DOT, KC_EQUAL), // . =
-/* [TD_TMUX]   = ACTION_TAP_DANCE_DOUBLE(, TAB), */
+  // Basic
+  [AE] = ACTION_TAP_DANCE_DOUBLE(KC_A, UC(0x00e4)),
+  [OE] = ACTION_TAP_DANCE_DOUBLE(KC_O, UC(0x00f6)),
+  [UE] = ACTION_TAP_DANCE_DOUBLE(KC_U, UC(0x00fc)),
+  [SS] = ACTION_TAP_DANCE_DOUBLE(KC_S, UC(0x00df)),
+
+  // Advanced
+  [GUI_CONTROL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, gui_control_finished, gui_control_reset),
+  [TMUX_ALT]    = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tmux_alt_finished, tmux_alt_reset),
 };
 
-// Modifier should be always OSM.
-// Letters should use tab dance for special characters.
-//
-// TODO (can they be optimized?):
-//  zsh complete suggestion: alt tab
-//  zsh use suggestion: alt return
-//  fasd directory: alt d
-//  fasd file: alt f
-//  fzf folder: ctrl d
-//  fzf file: ctrl f
-//  fzf history: ctrl h
-//
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-[LAYER_BASE] = LAYOUT_ergodox_pretty(
-  KC_NO,          KC_1,           KC_2,           KC_3,           KC_4,           KC_5,           KC_NO,                                          KC_NO,          KC_6,           KC_7,           KC_8,           KC_9,           KC_0,           KC_PSCREEN,
-  KC_TAB,         TD(TD_Q),       TD(TD_W),       TD(TD_E),       TD(TD_R),       TD(TD_T),       KC_NO,                                          TG(1),          TD(TD_Y),       TD(TD_U),       TD(TD_I),       TD(TD_O),       TD(TD_P),       KC_DELETE,
-  KC_ESCAPE,      TD(TD_A),       TD(TD_S),       TD(TD_D),       TD(TD_F),       TD(TD_G),                                                                       TD(TD_H),       TD(TD_J),       TD(TD_K),       TD(TD_L),       TD(TD_SCOLON),  OSM(MOD_LCTL),
-  OSM(MOD_LSFT),  TD(TD_Z),       TD(TD_X),       TD(TD_C),       TD(TD_V),       TD(TD_B),       KC_NO,                                          TG(2),          TD(TD_N),       TD(TD_M),       TD(TD_COMMA),   TD(TD_DOT),     TD(TD_SLASH),   OSM(MOD_LALT),
-  KC_NO,          KC_NO,          KC_NO,          KC_NO,          OSM(SUPER),                                                                                                     MOD_TMUX,       KC_NO,          KC_NO,          KC_NO,          KC_NO,
-                                                                                                  KC_NO,          KC_NO,          KC_NO,          KC_NO,
-                                                                                                                  KC_NO,          KC_NO,
-                                                                                  KC_SPACE,       KC_BSPACE,      KC_NO,          KC_NO,          KC_TAB,         KC_ENTER
-),
+  [LAYER_BASE] = LAYOUT_ergodox_pretty(
+    KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_PSCREEN,
+    KC_NO,          KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_NO,                                          KC_NO,          KC_Y,           TD(UE),         KC_I,           TD(OE),         KC_P,           KC_NO,
+    ESCAPE_SHIFT,   TD(AE),         TD(SS),         KC_D,           KC_F,           KC_G,                                                                           KC_H,           KC_J,           KC_K,           KC_L,           KC_SCOLON,      DELETE_SHIFT,
+    KC_NO,          KC_Z,           KC_X,           KC_C,           KC_V,           KC_B,           KC_NO,                                          KC_NO,          KC_N,           KC_M,           KC_COMMA,       KC_DOT,         KC_SLASH,       KC_NO,
+    KC_NO,          KC_NO,          KC_NO,          KC_NO,          TD(GUI_CONTROL),                                                                                                TD(TMUX_ALT),   KC_NO,          KC_NO,          KC_NO,          KC_NO,
+                                                                                                    KC_NO,          KC_NO,          KC_NO,          KC_NO,
+                                                                                                                    KC_NO,          KC_NO,
+                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    KC_NO,          KC_NO,          ENTER_NUMBERS,  SPACE_SYMBOLS
+  ),
 
-[LAYER_ARROW] = LAYOUT_ergodox_pretty(
-  KC_TRANSPARENT, KC_F1,          KC_F2,          KC_F3,          KC_F4,          KC_F5,          KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_F6,          KC_F7,          KC_F8,          KC_9,           KC_F10,          KC_F12,
-  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                 KC_LEFT,        KC_DOWN,        KC_UP,          KC_RIGHT,       KC_TRANSPARENT, KC_TRANSPARENT,
-  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_HOME,        KC_PGDOWN,      KC_PGUP,        KC_END,         KC_TRANSPARENT, KC_TRANSPARENT,
-  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-                                                                                                  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-                                                                                                                  KC_TRANSPARENT, KC_TRANSPARENT,
-                                                                                  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
-),
+  [LAYER_SYMBOLS] = LAYOUT_ergodox_pretty(
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_EXCLAIM,     KC_AT,          KC_HASH,        KC_DOLLAR,      KC_PERCENT,     KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_CIRCUMFLEX,  KC_AMPERSAND,   KC_ASTERISK,    KC_KP_MINUS,    KC_UNDERSCORE,  KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_GRAVE,       KC_LCBR,        KC_LBRACKET,    KC_LEFT_PAREN,  KC_LABK,                                                                        KC_RABK,        KC_RIGHT_PAREN, KC_RBRACKET,    KC_RCBR,        KC_COLON,       KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_TILDE,       KC_PIPE,        KC_BSLASH,      KC_QUOTE,       KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_DOUBLE_QUOTE,KC_PLUS,        KC_EQUAL,       KC_QUESTION,    KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+                                                                                                    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+                                                                                                                    KC_TRANSPARENT, KC_TRANSPARENT,
+                                                                                    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
+  ),
 
-[LAYER_MOUSE] = LAYOUT_ergodox_pretty(
-  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                 KC_MS_LEFT,     KC_MS_DOWN,     KC_MS_UP,       KC_MS_RIGHT,    KC_TRANSPARENT, KC_TRANSPARENT,
-  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-                                                                                                  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-                                                                                                                  KC_TRANSPARENT, KC_TRANSPARENT,
-                                                                                  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_MS_BTN1,     KC_MS_BTN2
-),
+  [LAYER_NUMBERS] = LAYOUT_ergodox_pretty(
+    KC_TRANSPARENT, KC_F1,          KC_F2,          KC_F3,          KC_F4,          KC_F5,          KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_F6,          KC_F7,          KC_F8,          KC_F9,          KC_F10,         KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_1,           KC_2,           KC_3,           KC_4,           KC_5,           KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_6,           KC_7,           KC_8,           KC_9,           KC_0,           KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                 KC_LEFT,        KC_DOWN,        KC_UP,          KC_RIGHT,       KC_TRANSPARENT, KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_HOME,        KC_PGDOWN,      KC_PGUP,        KC_END,         KC_TRANSPARENT, KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+                                                                                                    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+                                                                                                                    KC_TRANSPARENT, KC_TRANSPARENT,
+                                                                                    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
+  ),
 };
 
+void matrix_scan_user(void) {
+  uint8_t layer = biton32(layer_state);
 
-rgblight_config_t rgblight_config;
-bool disable_layer_color = 0;
+  ergodox_board_led_off();
+  ergodox_right_led_1_off();
+  ergodox_right_led_2_off();
+  ergodox_right_led_3_off();
 
-bool suspended = false;
+  switch (layer) {
+    case LAYER_BASE:
+      switch (keyboard_report->mods) {
+        case MOD_BIT(KC_LSFT):
+          rgblight_sethsv_noeeprom(HSV_GREEN);
+          rgblight_mode_noeeprom(0);
+          rgblight_enable_noeeprom();
+          break;
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case RGB_SLD:
-      if (record->event.pressed) {
-        rgblight_mode(1);
+        case MOD_BIT(KC_LCTL):
+          rgblight_sethsv_noeeprom(HSV_RED);
+          rgblight_mode_noeeprom(0);
+          rgblight_enable_noeeprom();
+          break;
+
+        case MOD_BIT(KC_LGUI):
+          rgblight_sethsv_noeeprom(HSV_YELLOW);
+          rgblight_mode_noeeprom(0);
+          rgblight_enable_noeeprom();
+          break;
+
+        default:
+          rgblight_disable_noeeprom();
+          break;
       }
-      return false;
-    case TOGGLE_LAYER_COLOR:
-      if (record->event.pressed) {
-        disable_layer_color ^= 1;
-      }
-      return false;
+      break;
+
+    case LAYER_SYMBOLS:
+      rgblight_sethsv_noeeprom(HSV_BLUE);
+      rgblight_mode_noeeprom(0);
+      rgblight_enable_noeeprom();
+      break;
+
+    case LAYER_NUMBERS:
+      rgblight_sethsv_noeeprom(HSV_PINK);
+      rgblight_mode_noeeprom(0);
+      rgblight_enable_noeeprom();
+      break;
+
+    default:
+      rgblight_disable_noeeprom();
+      break;
   }
-  return true;
 }
-
-uint32_t layer_state_set_user(uint32_t state) {
-
-    uint8_t layer = biton32(state);
-
-    ergodox_board_led_off();
-    ergodox_right_led_1_off();
-    ergodox_right_led_2_off();
-    ergodox_right_led_3_off();
-    switch (layer) {
-      case 1:
-        ergodox_right_led_1_on();
-        break;
-      case 2:
-        ergodox_right_led_2_on();
-        break;
-      case 3:
-        ergodox_right_led_3_on();
-        break;
-      case 4:
-        ergodox_right_led_1_on();
-        ergodox_right_led_2_on();
-        break;
-      case 5:
-        ergodox_right_led_1_on();
-        ergodox_right_led_3_on();
-        break;
-      case 6:
-        ergodox_right_led_2_on();
-        ergodox_right_led_3_on();
-        break;
-      case 7:
-        ergodox_right_led_1_on();
-        ergodox_right_led_2_on();
-        ergodox_right_led_3_on();
-        break;
-      default:
-        break;
-    }
-    switch (layer) {
-      case 1:
-        if(!disable_layer_color) {
-          rgblight_enable_noeeprom();
-          rgblight_mode_noeeprom(1);
-          rgblight_sethsv_noeeprom(0,255,255);
-        }
-        break;
-      case 2:
-        if(!disable_layer_color) {
-          rgblight_enable_noeeprom();
-          rgblight_mode_noeeprom(1);
-          rgblight_sethsv_noeeprom(168,255,255);
-        }
-        break;
-      case 3:
-        if(!disable_layer_color) {
-          rgblight_enable_noeeprom();
-          rgblight_mode_noeeprom(1);
-          rgblight_sethsv_noeeprom(38,255,255);
-        }
-        break;
-      default:
-        if(!disable_layer_color) {
-          rgblight_config.raw = eeconfig_read_rgblight();
-          if(rgblight_config.enable == true) {
-            rgblight_enable();
-            rgblight_mode(rgblight_config.mode);
-            rgblight_sethsv(rgblight_config.hue, rgblight_config.sat, rgblight_config.val);
-          }
-          else {
-            rgblight_disable();
-          }
-        }
-        break;
-    }
-    return state;
-
-};
