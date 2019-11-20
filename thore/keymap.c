@@ -18,14 +18,7 @@ enum custom_keycodes {
 };
 
 enum tab_dance_codes {
-  // Basic
-  AE = 0,
-  OE,
-  UE,
-  SS,
-
-  // Advanced
-  GUI_CONTROL,
+  GUI_CONTROL = 0,
   TMUX_ALT,
 };
 
@@ -56,7 +49,7 @@ void gui_control_finished (qk_tap_dance_state_t *state, void *user_data) {
   td_state = cur_dance(state);
   switch (td_state) {
     case SINGLE_TAP:
-      set_oneshot_mods(MOD_BIT(KC_LGUI));
+      set_oneshot_mods(MOD_BIT(KC_LGUI) | get_oneshot_mods() );
       break;
     case SINGLE_HOLD:
       register_mods(MOD_BIT(KC_LCTL));
@@ -74,7 +67,6 @@ void gui_control_reset (qk_tap_dance_state_t *state, void *user_data) {
       break;
   }
 };
-
 
 
 void tmux_alt_finished (qk_tap_dance_state_t *state, void *user_data) {
@@ -104,17 +96,10 @@ void tmux_alt_reset (qk_tap_dance_state_t *state, void *user_data) {
   }
 };
 
-// TODO: use shiftable unicodes with XT()
-qk_tap_dance_action_t tap_dance_actions[] = {
-  // Basic
-  [AE] = ACTION_TAP_DANCE_DOUBLE(KC_A, UC(0x00e4)),
-  [OE] = ACTION_TAP_DANCE_DOUBLE(KC_O, UC(0x00f6)),
-  [UE] = ACTION_TAP_DANCE_DOUBLE(KC_U, UC(0x00fc)),
-  [SS] = ACTION_TAP_DANCE_DOUBLE(KC_S, UC(0x00df)),
 
-  // Advanced
-  [GUI_CONTROL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, gui_control_finished, gui_control_reset),
-  [TMUX_ALT]    = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tmux_alt_finished, tmux_alt_reset),
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [GUI_CONTROL]   = ACTION_TAP_DANCE_FN_ADVANCED(NULL, gui_control_finished, gui_control_reset),
+  [TMUX_ALT]      = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tmux_alt_finished, tmux_alt_reset),
 };
 
 
@@ -122,8 +107,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_BASE] = LAYOUT_ergodox_pretty(
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_PSCREEN,
-    KC_NO,          KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_NO,                                          KC_NO,          KC_Y,           TD(UE),         KC_I,           TD(OE),         KC_P,           KC_NO,
-    ESCAPE_SHIFT,   TD(AE),         TD(SS),         KC_D,           KC_F,           KC_G,                                                                           KC_H,           KC_J,           KC_K,           KC_L,           KC_SCOLON,      DELETE_SHIFT,
+    KC_NO,          KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_NO,                                          KC_NO,          KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_NO,
+    ESCAPE_SHIFT,   KC_A,           KC_S,           KC_D,           KC_F,           KC_G,                                                                           KC_H,           KC_J,           KC_K,           KC_L,           KC_SCOLON,      DELETE_SHIFT,
     KC_NO,          KC_Z,           KC_X,           KC_C,           KC_V,           KC_B,           KC_NO,                                          KC_NO,          KC_N,           KC_M,           KC_COMMA,       KC_DOT,         KC_SLASH,       KC_NO,
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          TD(GUI_CONTROL),                                                                                                TD(TMUX_ALT),   KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,
