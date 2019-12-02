@@ -9,108 +9,111 @@ enum layer_names {
 enum custom_keycodes {
   ESCAPE_SHIFT   = SFT_T(KC_ESCAPE),
   DELETE_SHIFT   = SFT_T(KC_DELETE),
-  /* GUI_CONTROL      = MT(MOD_LALT, OSM(MOD_LGUI)), */
-  /* TMUX_ALT   = MT(MOD_LCTL, LALT(KC_GRAVE)), */
   SPACE_SYMBOLS  = LT(LAYER_SYMBOLS, KC_SPACE),
   BSPACE_SYMBOLS = LT(LAYER_SYMBOLS, KC_BSPACE),
   ENTER_NUMBERS  = LT(LAYER_NUMBERS, KC_ENTER),
   TAB_NUMBERS    = LT(LAYER_NUMBERS, KC_TAB),
 };
 
+
+
+/*
+ * TAP DANCE STUFF
+ */
+
 enum tab_dance_codes {
-  GUI_CONTROL = 0,
-  TMUX_ALT,
+  F_CTRL = 0,
+  J_CTRL,
+  D_ALT,
+  K_ALT,
 };
 
 typedef enum {
     SINGLE_TAP,
     SINGLE_HOLD,
+    DOUBLE_SINGLE_TAP,
 } td_state_t;
 
+
 static td_state_t td_state;
-int cur_dance (qk_tap_dance_state_t *state);
 
-// Finished and reset functions for advanced tap dance keycodes.
-void gui_control_finished (qk_tap_dance_state_t *state, void *user_data);
-void gui_control_reset (qk_tap_dance_state_t *state, void *user_data);
-
-void tmux_alt_finished (qk_tap_dance_state_t *state, void *user_data);
-void tmux_alt_reset (qk_tap_dance_state_t *state, void *user_data);
-
-int cur_dance (qk_tap_dance_state_t *state) {
+int cur_dance_state (qk_tap_dance_state_t *state) {
   if (state->count == 1) {
     if (state->interrupted || !state->pressed) { return SINGLE_TAP; }
     else { return SINGLE_HOLD; }
   }
-  else { return 2; }
+  if (state->count == 2) { return DOUBLE_SINGLE_TAP; }
+  else { return 3; } // any number higher than the maximum state value you return above
 };
 
-void gui_control_finished (qk_tap_dance_state_t *state, void *user_data) {
-  td_state = cur_dance(state);
-  switch (td_state) {
+/*
+ * Clone the MT() functionality via simulation by ACTION_TAP_DANCE_FN_ADVANCED
+ * The advantage is that the PERMISSIVE_HOLD option does not apply to it.
+ * It is not possible to use MT() with and without permissive hold. Therefore,
+ * the basic MT() usage takes advantage of it, while all occurrences with tap
+ * dance will ignore it.
+ */
+void mt_clone_tap_dance_finished (qk_tap_dance_state_t *state, int keycode, int modifier) {
+  td_state = cur_dance_state(state);
+
+  switch(td_state) {
     case SINGLE_TAP:
-      set_oneshot_mods(MOD_BIT(KC_LGUI) | get_oneshot_mods() );
-      break;
-    case SINGLE_HOLD:
-      register_mods(MOD_BIT(KC_LCTL));
-      break;
-  }
-};
-
-void gui_control_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (td_state) {
-    case SINGLE_TAP:
-      clear_oneshot_mods();
-      break;
-    case SINGLE_HOLD:
-      unregister_mods(MOD_BIT(KC_LCTL));
-      break;
-  }
-};
-
-
-void tmux_alt_finished (qk_tap_dance_state_t *state, void *user_data) {
-  td_state = cur_dance(state);
-
-  switch (td_state) {
-    case SINGLE_TAP:
-      register_mods(MOD_BIT(KC_LALT));
-      register_code16(KC_GRAVE);
+      register_code16(keycode);
       break;
 
     case SINGLE_HOLD:
-      register_mods(MOD_BIT(KC_LALT));
+      register_mods(MOD_BIT(modifier));
       break;
-  }
-};
 
-void tmux_alt_reset (qk_tap_dance_state_t *state, void *user_data) {
-  switch (td_state) {
-    case SINGLE_TAP:
-      unregister_mods(MOD_BIT(KC_LALT));
-      unregister_code16(KC_GRAVE);
-      break;
-    case SINGLE_HOLD:
-      unregister_mods(MOD_BIT(KC_LALT));
+    case DOUBLE_SINGLE_TAP:
+      tap_code16(keycode);
+      register_code16(keycode);
       break;
   }
-};
+}
+
+void mt_clone_tap_dance_reset (qk_tap_dance_state_t *state, int keycode, int modifier) {
+  switch(td_state) {
+    case SINGLE_TAP:
+    case DOUBLE_SINGLE_TAP:
+      unregister_code16(keycode);
+      break;
+
+    case SINGLE_HOLD:
+      unregister_mods(MOD_BIT(modifier));
+      break;
+  }
+}
+
+/*
+ * One-liner for the different tap-dances based on the cloned MT() functionality.
+ */
+void f_ctrl_finished (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_finished(state, KC_F, KC_LCTL); }
+void f_ctrl_reset (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_reset(state, KC_F, KC_LCTL); }
+
+void j_ctrl_finished (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_finished(state, KC_J, KC_LCTL); }
+void j_ctrl_reset (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_reset(state, KC_J, KC_LCTL); }
+
+void d_alt_finished (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_finished(state, KC_D, KC_LALT); }
+void d_alt_reset (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_reset(state, KC_D, KC_LALT); }
+
+void k_alt_finished (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_finished(state, KC_K, KC_LALT); }
+void k_alt_reset (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_reset(state, KC_K, KC_LALT); }
 
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-  [GUI_CONTROL]   = ACTION_TAP_DANCE_FN_ADVANCED(NULL, gui_control_finished, gui_control_reset),
-  [TMUX_ALT]      = ACTION_TAP_DANCE_FN_ADVANCED(NULL, tmux_alt_finished, tmux_alt_reset),
+  [J_CTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, j_ctrl_finished, j_ctrl_reset),
+  [K_ALT]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, k_alt_finished, k_alt_reset),
 };
-
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_BASE] = LAYOUT_ergodox_pretty(
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_PSCREEN,
     KC_NO,          KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_NO,                                          KC_NO,          KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_NO,
-    ESCAPE_SHIFT,   KC_A,           KC_S,           KC_D,           KC_F,           KC_G,                                                                           KC_H,           KC_J,           KC_K,           KC_L,           KC_SCOLON,      DELETE_SHIFT,
+    ESCAPE_SHIFT,   KC_A,           KC_S,           TD(D_ALT),      TD(F_CTRL),     KC_G,                                                                           KC_H,           TD(J_CTRL),     TD(K_ALT),      KC_L,           KC_SCOLON,      DELETE_SHIFT,
     KC_NO,          KC_Z,           KC_X,           KC_C,           KC_V,           KC_B,           KC_NO,                                          KC_NO,          KC_N,           KC_M,           KC_COMMA,       KC_DOT,         KC_SLASH,       KC_NO,
-    KC_NO,          KC_NO,          KC_NO,          KC_NO,          TD(GUI_CONTROL),                                                                                                TD(TMUX_ALT),   KC_NO,          KC_NO,          KC_NO,          KC_NO,
+    KC_NO,          KC_NO,          KC_NO,          KC_NO,          OSM(MOD_LGUI),                                                                  LALT(KC_GRAVE), KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                                     KC_NO,          KC_NO,
                                                                                     BSPACE_SYMBOLS, TAB_NUMBERS,    KC_NO,          KC_NO,          ENTER_NUMBERS,  SPACE_SYMBOLS
