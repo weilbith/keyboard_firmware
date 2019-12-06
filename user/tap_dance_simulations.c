@@ -12,6 +12,7 @@ typedef enum {
 static td_state_t td_state;
 
 
+int cur_dance_state (qk_tap_dance_state_t *state);
 int cur_dance_state (qk_tap_dance_state_t *state) {
   if (state->count == 1) {
     if (state->interrupted || !state->pressed) { return SINGLE_TAP; }
@@ -29,34 +30,37 @@ int cur_dance_state (qk_tap_dance_state_t *state) {
  * the basic MT() usage takes advantage of it, while all occurrences with tap
  * dance will ignore it.
  */
-void mt_clone_tap_dance_finished (qk_tap_dance_state_t *state, int keycode, int modifier) {
+void tap_dance_mt_finished (qk_tap_dance_state_t *state, void *user_data) {
   td_state = cur_dance_state(state);
+  tap_dance_mt_config_t *config = (tap_dance_mt_config_t *)user_data;
 
   switch(td_state) {
     case SINGLE_TAP:
-      register_code16(keycode);
+      register_code16(config->keycode);
       break;
 
     case SINGLE_HOLD:
-      register_mods(MOD_BIT(modifier));
+      register_mods(MOD_BIT(config->modifier));
       break;
 
     case MULTI_TAP:
       for (int i = 0; i < state->count; i = i+1) {
-        tap_code16(keycode);
+        tap_code16(config->keycode);
       }
       break;
   }
 }
 
-void mt_clone_tap_dance_reset (qk_tap_dance_state_t *state, int keycode, int modifier) {
+void tap_dance_mt_reset (qk_tap_dance_state_t *state, void *user_data) {
+  tap_dance_mt_config_t *config = (tap_dance_mt_config_t *)user_data;
+
   switch(td_state) {
     case SINGLE_TAP:
-      unregister_code16(keycode);
+      unregister_code16(config->keycode);
       break;
 
     case SINGLE_HOLD:
-      unregister_mods(MOD_BIT(modifier));
+      unregister_mods(MOD_BIT(config->modifier));
       break;
 
     case MULTI_TAP:

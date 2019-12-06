@@ -17,7 +17,6 @@ enum custom_keycodes {
 };
 
 
-
 /*
  * TAP DANCE STUFF
  */
@@ -29,28 +28,11 @@ enum tab_dance_codes {
   K_ALT,
 };
 
-
-/*
- * One-liner for the different tap-dances based on the cloned MT() functionality.
- */
-void f_ctrl_finished (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_finished(state, KC_F, KC_LCTL); }
-void f_ctrl_reset (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_reset(state, KC_F, KC_LCTL); }
-
-void j_ctrl_finished (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_finished(state, KC_J, KC_LCTL); }
-void j_ctrl_reset (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_reset(state, KC_J, KC_LCTL); }
-
-void d_alt_finished (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_finished(state, KC_D, KC_LALT); }
-void d_alt_reset (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_reset(state, KC_D, KC_LALT); }
-
-void k_alt_finished (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_finished(state, KC_K, KC_LALT); }
-void k_alt_reset (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_dance_reset(state, KC_K, KC_LALT); }
-
-
 qk_tap_dance_action_t tap_dance_actions[] = {
-  [F_CTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, f_ctrl_finished, f_ctrl_reset),
-  [J_CTRL] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, j_ctrl_finished, j_ctrl_reset, 200),
-  [D_ALT]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, d_alt_finished, d_alt_reset),
-  [K_ALT]  = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, k_alt_finished, k_alt_reset, 200),
+  [F_CTRL] = ACTION_TAP_DANCE_MT(KC_F, KC_LCTL),
+  [J_CTRL] = ACTION_TAP_DANCE_MT(KC_J, KC_LCTL),
+  [D_ALT]  = ACTION_TAP_DANCE_MT(KC_D, KC_LALT),
+  [K_ALT]  = ACTION_TAP_DANCE_MT(KC_K, KC_LALT),
 };
 
 
