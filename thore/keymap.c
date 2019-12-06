@@ -94,6 +94,12 @@ void matrix_scan_user(void) {
           rgblight_enable_noeeprom();
           break;
 
+        case MOD_BIT(KC_LALT):
+          rgblight_sethsv_noeeprom(HSV_WHITE);
+          rgblight_mode_noeeprom(0);
+          rgblight_enable_noeeprom();
+          break;
+
         case MOD_BIT(KC_LGUI):
           rgblight_sethsv_noeeprom(HSV_YELLOW);
           rgblight_mode_noeeprom(0);
