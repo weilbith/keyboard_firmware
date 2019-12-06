@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "thore.h"
 
 enum layer_names {
   LAYER_BASE  = 0,
@@ -28,62 +29,6 @@ enum tab_dance_codes {
   K_ALT,
 };
 
-typedef enum {
-    SINGLE_TAP,
-    SINGLE_HOLD,
-    DOUBLE_SINGLE_TAP,
-} td_state_t;
-
-
-static td_state_t td_state;
-
-int cur_dance_state (qk_tap_dance_state_t *state) {
-  if (state->count == 1) {
-    if (state->interrupted || !state->pressed) { return SINGLE_TAP; }
-    else { return SINGLE_HOLD; }
-  }
-  if (state->count == 2) { return DOUBLE_SINGLE_TAP; }
-  else { return 3; } // any number higher than the maximum state value you return above
-};
-
-/*
- * Clone the MT() functionality via simulation by ACTION_TAP_DANCE_FN_ADVANCED
- * The advantage is that the PERMISSIVE_HOLD option does not apply to it.
- * It is not possible to use MT() with and without permissive hold. Therefore,
- * the basic MT() usage takes advantage of it, while all occurrences with tap
- * dance will ignore it.
- */
-void mt_clone_tap_dance_finished (qk_tap_dance_state_t *state, int keycode, int modifier) {
-  td_state = cur_dance_state(state);
-
-  switch(td_state) {
-    case SINGLE_TAP:
-      register_code16(keycode);
-      break;
-
-    case SINGLE_HOLD:
-      register_mods(MOD_BIT(modifier));
-      break;
-
-    case DOUBLE_SINGLE_TAP:
-      tap_code16(keycode);
-      register_code16(keycode);
-      break;
-  }
-}
-
-void mt_clone_tap_dance_reset (qk_tap_dance_state_t *state, int keycode, int modifier) {
-  switch(td_state) {
-    case SINGLE_TAP:
-    case DOUBLE_SINGLE_TAP:
-      unregister_code16(keycode);
-      break;
-
-    case SINGLE_HOLD:
-      unregister_mods(MOD_BIT(modifier));
-      break;
-  }
-}
 
 /*
  * One-liner for the different tap-dances based on the cloned MT() functionality.
@@ -102,8 +47,10 @@ void k_alt_reset (qk_tap_dance_state_t *state, void *user_data) { mt_clone_tap_d
 
 
 qk_tap_dance_action_t tap_dance_actions[] = {
-  [J_CTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, j_ctrl_finished, j_ctrl_reset),
-  [K_ALT]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, k_alt_finished, k_alt_reset),
+  [F_CTRL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, f_ctrl_finished, f_ctrl_reset),
+  [J_CTRL] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, j_ctrl_finished, j_ctrl_reset, 200),
+  [D_ALT]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, d_alt_finished, d_alt_reset),
+  [K_ALT]  = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, k_alt_finished, k_alt_reset, 200),
 };
 
 
