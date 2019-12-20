@@ -71,61 +71,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
-void matrix_scan_user(void) {
-  uint8_t layer = biton32(layer_state);
+backlight_hsv_color_t backlight_modifier_colors[] = {
+  [MOD_BIT(KC_LCTRL)]  = { HSV_RED },
+  [MOD_BIT(KC_LSHIFT)] = { HSV_GREEN },
+  [MOD_BIT(KC_LALT)]   = { HSV_WHITE },
+  [MOD_BIT(KC_LGUI)]   = { HSV_YELLOW },
+};
 
+backlight_hsv_color_t backlight_layer_colors[] = {
+  [LAYER_SYMBOLS] = { HSV_BLUE },
+  [LAYER_NUMBERS] = { HSV_PINK },
+};
+
+
+void matrix_scan_user(void) {
   ergodox_board_led_off();
   ergodox_right_led_1_off();
   ergodox_right_led_2_off();
   ergodox_right_led_3_off();
 
-  switch (layer) {
-    case LAYER_BASE:
-      switch (keyboard_report->mods) {
-        case MOD_BIT(KC_LSFT):
-          rgblight_sethsv_noeeprom(HSV_GREEN);
-          rgblight_mode_noeeprom(0);
-          rgblight_enable_noeeprom();
-          break;
-
-        case MOD_BIT(KC_LCTL):
-          rgblight_sethsv_noeeprom(HSV_RED);
-          rgblight_mode_noeeprom(0);
-          rgblight_enable_noeeprom();
-          break;
-
-        case MOD_BIT(KC_LALT):
-          rgblight_sethsv_noeeprom(HSV_WHITE);
-          rgblight_mode_noeeprom(0);
-          rgblight_enable_noeeprom();
-          break;
-
-        case MOD_BIT(KC_LGUI):
-          rgblight_sethsv_noeeprom(HSV_YELLOW);
-          rgblight_mode_noeeprom(0);
-          rgblight_enable_noeeprom();
-          break;
-
-        default:
-          rgblight_disable_noeeprom();
-          break;
-      }
-      break;
-
-    case LAYER_SYMBOLS:
-      rgblight_sethsv_noeeprom(HSV_BLUE);
-      rgblight_mode_noeeprom(0);
-      rgblight_enable_noeeprom();
-      break;
-
-    case LAYER_NUMBERS:
-      rgblight_sethsv_noeeprom(HSV_PINK);
-      rgblight_mode_noeeprom(0);
-      rgblight_enable_noeeprom();
-      break;
-
-    default:
-      rgblight_disable_noeeprom();
-      break;
-  }
-}
+  backlight_apply_for_modifier_and_layer();
+};
