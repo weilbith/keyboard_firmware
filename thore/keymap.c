@@ -94,14 +94,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 backlight_hsv_color_t backlight_modifier_colors[] = {
   [MOD_BIT(KC_LCTRL)]  = { HSV_RED },
-  [MOD_BIT(KC_LSHIFT)] = { HSV_GREEN },
   [MOD_BIT(KC_LALT)]   = { HSV_WHITE },
   [MOD_BIT(KC_LGUI)]   = { HSV_YELLOW },
 };
 
 backlight_hsv_color_t backlight_layer_colors[] = {
-  [LAYER_SYMBOLS] = { HSV_BLUE },
-  [LAYER_NUMBERS] = { HSV_PINK },
   [LAYER_WORKMAN] = { HSV_ORANGE },
 };
 
