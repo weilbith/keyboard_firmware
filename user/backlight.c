@@ -4,6 +4,7 @@
 
 #define is_backlight_hsv_color_null(color) (color.hue + color.saturation + color.value) <= 0
 
+backlight_hsv_color_t last_color;
 
 void backlight_apply_for_modifier_and_layer(void) {
   uint8_t layer = biton32(layer_state);
@@ -18,7 +19,11 @@ void backlight_apply_for_modifier_and_layer(void) {
     final_color = modifier_color;
   }
 
-  rgblight_sethsv_noeeprom(final_color.hue, final_color.saturation, final_color.value);
-  rgblight_mode_noeeprom(0);
-  rgblight_enable_noeeprom();
+  // Avoid flickering by resetting the color.
+  if (final_color != last_color) {
+    rgblight_sethsv_noeeprom(final_color.hue, final_color.saturation, final_color.value);
+    rgblight_mode_noeeprom(0);
+    rgblight_enable_noeeprom();
+    last_color = final_color;
+  }
 };

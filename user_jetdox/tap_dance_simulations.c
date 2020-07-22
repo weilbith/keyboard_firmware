@@ -12,7 +12,6 @@ typedef enum {
 static td_state_t td_state;
 
 
-int cur_dance_state (qk_tap_dance_state_t *state);
 int cur_dance_state (qk_tap_dance_state_t *state) {
   if (state->count == 1) {
     if (state->interrupted || !state->pressed) { return SINGLE_TAP; }
