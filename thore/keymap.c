@@ -9,8 +9,16 @@ enum layer_names {
 };
 
 enum custom_keycodes {
-  ESCAPE_SHIFT   = SFT_T(KC_ESCAPE),
-  DELETE_SHIFT   = SFT_T(KC_DELETE),
+  F_CTRL         = LCTL_T(KC_F), // QWERTY
+  T_CTRL         = LCTL_T(KC_T), // Workman
+  J_CTRL         = RCTL_T(KC_J), // QWERTY
+  N_CTRL         = RCTL_T(KC_N), // Workman
+  D_ALT          = LALT_T(KC_D), // QWERTY
+  H_ALT          = LALT_T(KC_H), // Workman
+  K_ALT          = RALT_T(KC_K), // QWERTY
+  E_ALT          = RALT_T(KC_E), // Workman
+  ESCAPE_SHIFT   = LSFT_T(KC_ESCAPE),
+  DELETE_SHIFT   = LSFT_T(KC_DELETE),
   SPACE_SYMBOLS  = LT(LAYER_SYMBOLS, KC_SPACE),
   BSPACE_SYMBOLS = LT(LAYER_SYMBOLS, KC_BSPACE),
   ENTER_NUMBERS  = LT(LAYER_NUMBERS, KC_ENTER),
@@ -18,38 +26,11 @@ enum custom_keycodes {
 };
 
 
-/*
- * TAP DANCE STUFF
- */
-
-enum tab_dance_codes {
-  F_CTRL = 0, // QWERTY
-  T_CTRL, // Workman
-  J_CTRL, // QWERTY
-  N_CTRL, // Workman
-  D_ALT, // QWERTY
-  H_ALT, // Workman
-  K_ALT, // QWERTY
-  E_ALT, // Workman
-};
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-  [F_CTRL] = ACTION_TAP_DANCE_MT(KC_F, KC_LCTL), // QWERTY
-  [T_CTRL] = ACTION_TAP_DANCE_MT(KC_T, KC_LCTL), // Workman
-  [J_CTRL] = ACTION_TAP_DANCE_MT(KC_J, KC_LCTL), // QWERTY
-  [N_CTRL] = ACTION_TAP_DANCE_MT(KC_N, KC_LCTL), // Workman
-  [D_ALT]  = ACTION_TAP_DANCE_MT(KC_D, KC_LALT), // QWERTY
-  [H_ALT]  = ACTION_TAP_DANCE_MT(KC_H, KC_LALT), // Workman
-  [K_ALT]  = ACTION_TAP_DANCE_MT(KC_K, KC_LALT), // QWERTY
-  [E_ALT]  = ACTION_TAP_DANCE_MT(KC_E, KC_LALT), // Workman
-};
-
-
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_QWERTY] = LAYOUT_ergodox_pretty(
     TG(LAYER_WORKMAN), KC_NO,       KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_PSCREEN,
     KC_NO,          KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_NO,                                          KC_NO,          KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_NO,
-    ESCAPE_SHIFT,   KC_A,           KC_S,           TD(D_ALT),      TD(F_CTRL),     KC_G,                                                                           KC_H,           TD(J_CTRL),     TD(K_ALT),      KC_L,           KC_SCOLON,      DELETE_SHIFT,
+    ESCAPE_SHIFT,   KC_A,           KC_S,           D_ALT,          F_CTRL,         KC_G,                                                                           KC_H,           J_CTRL,         K_ALT,          KC_L,           KC_SCOLON,      DELETE_SHIFT,
     KC_NO,          KC_Z,           KC_X,           KC_C,           KC_V,           KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_M,           KC_COMMA,       KC_DOT,         KC_SLASH,       KC_NO,
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_B,                                                                                                           KC_N,           KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,
@@ -83,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_WORKMAN] = LAYOUT_ergodox_pretty(
     KC_TRANSPARENT, KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_PSCREEN,
     KC_NO,          KC_Q,           KC_D,           KC_R,           KC_W,           KC_B,           KC_NO,                                          KC_NO,          KC_J,           KC_F,           KC_U,           KC_P,           KC_SCOLON,      KC_NO,
-    ESCAPE_SHIFT,   KC_A,           KC_S,           TD(H_ALT),      TD(T_CTRL),     KC_G,                                                                           KC_Y,           TD(N_CTRL),     TD(E_ALT),      KC_O,           KC_I,           DELETE_SHIFT,
+    ESCAPE_SHIFT,   KC_A,           KC_S,           H_ALT,          T_CTRL,         KC_G,                                                                           KC_Y,           N_CTRL,         E_ALT,          KC_O,           KC_I,           DELETE_SHIFT,
     KC_NO,          KC_Z,           KC_X,           KC_M,           KC_C,           KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_L,           KC_COMMA,       KC_DOT,         KC_SLASH,       KC_NO,
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_V,                                                                                                           KC_K,           KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,
@@ -92,16 +73,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
-backlight_hsv_color_t backlight_modifier_colors[] = {
-  [MOD_BIT(KC_LCTRL)]  = { HSV_RED },
-  [MOD_BIT(KC_LALT)]   = { HSV_WHITE },
-  [MOD_BIT(KC_LGUI)]   = { HSV_YELLOW },
-};
-
-backlight_hsv_color_t backlight_layer_colors[] = {
-  [LAYER_WORKMAN] = { HSV_ORANGE },
-};
-
+backlight_hsv_color_t backlight_modifier_colors[] = {};
+backlight_hsv_color_t backlight_layer_colors[] = {};
 
 void matrix_scan_user(void) {
   ergodox_board_led_off();
