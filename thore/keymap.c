@@ -1,5 +1,4 @@
 #include QMK_KEYBOARD_H
-#include "thore.h"
 
 enum layer_names {
   LAYER_QWERTY = 0,
@@ -71,16 +70,4 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                                                                     KC_NO,          KC_NO,
                                                                                     BSPACE_SYMBOLS, TAB_NUMBERS,    OSM(MOD_LGUI),  LALT(KC_GRAVE), ENTER_NUMBERS,  SPACE_SYMBOLS
   ),
-};
-
-backlight_hsv_color_t backlight_modifier_colors[] = {};
-backlight_hsv_color_t backlight_layer_colors[] = {};
-
-void matrix_scan_user(void) {
-  ergodox_board_led_off();
-  ergodox_right_led_1_off();
-  ergodox_right_led_2_off();
-  ergodox_right_led_3_off();
-
-  backlight_apply_for_modifier_and_layer();
 };
