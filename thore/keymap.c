@@ -12,10 +12,16 @@ enum custom_keycodes {
   T_CTRL         = LCTL_T(KC_T), // Workman
   J_CTRL         = RCTL_T(KC_J), // QWERTY
   N_CTRL         = RCTL_T(KC_N), // Workman
-  D_ALT          = LALT_T(KC_D), // QWERTY
-  H_ALT          = LALT_T(KC_H), // Workman
-  K_ALT          = RALT_T(KC_K), // QWERTY
-  E_ALT          = RALT_T(KC_E), // Workman
+  D_SHIFT        = LSFT_T(KC_D), // QWERTY
+  H_SHIFT        = LSFT_T(KC_H), // Workman
+  K_SHIFT        = RSFT_T(KC_K), // QWERTY
+  E_SHIFT        = RSFT_T(KC_E), // Workman
+  S_GUI          = LGUI_T(KC_S), // QWERTY & Workman
+  L_GUI          = RGUI_T(KC_L), // QWERTY
+  O_GUI          = RGUI_T(KC_E), // Workman
+  A_ALT          = LALT_T(KC_A), // QWERTY & Workman
+  SCOLON_ALT     = RALT_T(KC_SCOLON), // QWERTY
+  I_ALT          = RALT_T(KC_I), // Workman
   ESCAPE_SHIFT   = LSFT_T(KC_ESCAPE),
   DELETE_SHIFT   = LSFT_T(KC_DELETE),
   SPACE_SYMBOLS  = LT(LAYER_SYMBOLS, KC_SPACE),
@@ -29,7 +35,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_QWERTY] = LAYOUT_ergodox_pretty(
     TG(LAYER_WORKMAN), KC_NO,       KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_PSCREEN,
     KC_NO,          KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_NO,                                          KC_NO,          KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_NO,
-    ESCAPE_SHIFT,   KC_A,           KC_S,           D_ALT,          F_CTRL,         KC_G,                                                                           KC_H,           J_CTRL,         K_ALT,          KC_L,           KC_SCOLON,      DELETE_SHIFT,
+    ESCAPE_SHIFT,   A_ALT,          S_GUI,          D_SHIFT,        F_CTRL,         KC_G,                                                                           KC_H,           J_CTRL,         K_SHIFT,        L_GUI,          SCOLON_ALT,     DELETE_SHIFT,
     KC_NO,          KC_Z,           KC_X,           KC_C,           KC_V,           KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_M,           KC_COMMA,       KC_DOT,         KC_SLASH,       KC_NO,
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_B,                                                                                                           KC_N,           KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,
@@ -63,7 +69,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_WORKMAN] = LAYOUT_ergodox_pretty(
     KC_TRANSPARENT, KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_PSCREEN,
     KC_NO,          KC_Q,           KC_D,           KC_R,           KC_W,           KC_B,           KC_NO,                                          KC_NO,          KC_J,           KC_F,           KC_U,           KC_P,           KC_SCOLON,      KC_NO,
-    ESCAPE_SHIFT,   KC_A,           KC_S,           H_ALT,          T_CTRL,         KC_G,                                                                           KC_Y,           N_CTRL,         E_ALT,          KC_O,           KC_I,           DELETE_SHIFT,
+    ESCAPE_SHIFT,   A_ALT,          S_GUI,          H_SHIFT,        T_CTRL,         KC_G,                                                                           KC_Y,           N_CTRL,         E_SHIFT,        O_GUI,          I_ALT,          DELETE_SHIFT,
     KC_NO,          KC_Z,           KC_X,           KC_M,           KC_C,           KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_L,           KC_COMMA,       KC_DOT,         KC_SLASH,       KC_NO,
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_V,                                                                                                           KC_K,           KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,
