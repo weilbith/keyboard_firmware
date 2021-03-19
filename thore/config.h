@@ -2,6 +2,10 @@
 #define PERMISSIVE_HOLD
 #define TAPPING_FORCE_HOLD
 
+// In progress to find the optimium. Starting high...
+#undef TAPPING_TERM
+#define TAPPING_TERM 400
+
 #undef DEBOUNCE
 #define DEBOUNCE 2
 
