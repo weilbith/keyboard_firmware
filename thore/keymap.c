@@ -4,6 +4,7 @@ enum layer_names {
   LAYER_QWERTY = 0,
   LAYER_SYMBOLS,
   LAYER_NUMBERS,
+  LAYER_I18N,
   LAYER_WORKMAN,
 };
 
@@ -20,12 +21,19 @@ enum custom_keycodes {
   L_GUI          = RGUI_T(KC_L), // QWERTY
   O_GUI          = RGUI_T(KC_E), // Workman
   A_ALT          = LALT_T(KC_A), // QWERTY & Workman
-  SCOLON_ALT     = RALT_T(KC_SCOLON), // QWERTY
-  I_ALT          = RALT_T(KC_I), // Workman
+  SCOLON_ALT     = LALT_T(KC_SCOLON), // QWERTY
+  I_ALT          = LALT_T(KC_I), // Workman
   SPACE_SYMBOLS  = LT(LAYER_SYMBOLS, KC_SPACE),
   BSPACE_SYMBOLS = LT(LAYER_SYMBOLS, KC_BSPACE),
   ENTER_NUMBERS  = LT(LAYER_NUMBERS, KC_ENTER),
   TAB_NUMBERS    = LT(LAYER_NUMBERS, KC_TAB),
+  ESCAPE_I18N    = LT(LAYER_I18N, KC_ESCAPE),
+  DELETE_I18N    = LT(LAYER_I18N, KC_DELETE),
+  KC_AE          = RALT(KC_Q),
+  KC_OE          = RALT(KC_P),
+  KC_UE          = RALT(KC_Y),
+  KC_SZ          = RALT(KC_S),
+  KC_EURO        = RALT(KC_5),
 };
 
 
@@ -38,7 +46,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_B,                                                                                                           KC_N,           KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                                     KC_NO,          KC_NO,
-                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    KC_ESCAPE,      KC_DELETE,      ENTER_NUMBERS,  SPACE_SYMBOLS
+                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    ESCAPE_I18N,    DELETE_I18N,    ENTER_NUMBERS,  SPACE_SYMBOLS
   ),
   
 
@@ -64,6 +72,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                                     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
   ),
 
+  [LAYER_I18N] = LAYOUT_ergodox_pretty(
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_EURO,        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_UE,          KC_OE,          KC_TRANSPARENT, KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_AE,          KC_SZ,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+                                                                                                    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+                                                                                                                    KC_TRANSPARENT, KC_TRANSPARENT,
+                                                                                    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
+  ),
+
   [LAYER_WORKMAN] = LAYOUT_ergodox_pretty(
     KC_TRANSPARENT, KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_PSCREEN,
     KC_NO,          KC_Q,           KC_D,           KC_R,           KC_W,           KC_B,           KC_NO,                                          KC_NO,          KC_J,           KC_F,           KC_U,           KC_P,           KC_SCOLON,      KC_NO,
@@ -72,6 +91,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_V,                                                                                                           KC_K,           KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                                     KC_NO,          KC_NO,
-                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    KC_ESCAPE,      KC_DELETE,      ENTER_NUMBERS,  SPACE_SYMBOLS
+                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    ESCAPE_I18N,    DELETE_I18N,    ENTER_NUMBERS,  SPACE_SYMBOLS
   ),
 };
