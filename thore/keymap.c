@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "print.h"
 
 enum layer_names {
   LAYER_QWERTY = 0,
@@ -94,3 +95,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                                     BSPACE_SYMBOLS, TAB_NUMBERS,    ESCAPE_I18N,    DELETE_I18N,    ENTER_NUMBERS,  SPACE_SYMBOLS
   ),
 };
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (record->event.pressed) {
+    uprintf(
+      "0x%04X,%u,%u,%u\n",
+      keycode,
+      record->event.key.row,
+      record->event.key.col,
+      get_highest_layer(layer_state)
+    );
+  }
+
+  return true;
+}
