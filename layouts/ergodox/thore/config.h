@@ -4,7 +4,7 @@
 
 // In progress to find the optimium. Starting high...
 #undef TAPPING_TERM
-#define TAPPING_TERM 400
+#define TAPPING_TERM 350
 
 #undef DEBOUNCE
 #define DEBOUNCE 2
