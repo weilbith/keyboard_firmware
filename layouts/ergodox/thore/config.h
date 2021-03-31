@@ -4,7 +4,9 @@
 
 // In progress to find the optimium. Starting high...
 #undef TAPPING_TERM
-#define TAPPING_TERM 350
+#define TAPPING_TERM 300
+#define TAPPING_TERM_DANCING_BRACKETS 175
+#define TAPPING_TERM_PER_KEY
 
 #undef DEBOUNCE
 #define DEBOUNCE 2

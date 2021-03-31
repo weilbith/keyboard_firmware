@@ -124,3 +124,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
   return true;
 }
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case TD(PARENTS):
+    case TD(SQUARES):
+    case TD(CURLY):
+    case TD(ANGLES):
+        return TAPPING_TERM_DANCING_BRACKETS;
+
+    default:
+        return TAPPING_TERM;
+  }
+}
