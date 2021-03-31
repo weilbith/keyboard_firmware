@@ -23,7 +23,9 @@ setup: ## Should be evaluated like `eval "$(make setup)"` to setup shell for dev
 	@echo "source $(VIRTUAL_ENVIRONMENT_PATH)/bin/activate"
 	@echo "alias qmk='qmk --config-file $(QMK_CONFIG_FILE)'"
 
-link: ## Links layouts and keymaps into the firmware submodule (required to compile)
+link: link-layouts link-users ## Links all local sources into the firmware submodule (required to compile)
+
+link-layouts: ## Link layouts and keymaps into the firmware submodule (required to compile)
 	@for layout in $(BASE_DIRECTORY)/layouts/*; do \
 		layout_name="$$(basename "$$layout")"; \
 		layout_target="$(QMK_HOME)/layouts/community/$$layout_name"; \
@@ -43,6 +45,20 @@ link: ## Links layouts and keymaps into the firmware submodule (required to comp
 					fi \
 				fi \
 			done \
+		fi \
+	done
+
+link-users: ## Link all users inot the firmware submodule (required to compile)
+	@for user in $(BASE_DIRECTORY)/users/*; do \
+		user_name="$$(basename "$$user")"; \
+		user_target="$(QMK_HOME)/users/$$user_name"; \
+		if [[ ! -e $$user_target ]]; then \
+			ln --symbolic $$user $$user_target; \
+			echo "Linked new user '$$user_name'"; \
+		else \
+			if grep --quiet '$(BASE_DIRECTORY)' <<< $$(readlink $$user_target); then
+				echo "User '$$user_name' does already exist!"; \
+			fi \
 		fi \
 	done
 
