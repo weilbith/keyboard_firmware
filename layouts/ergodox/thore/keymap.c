@@ -11,6 +11,9 @@ enum layer_names {
 };
 
 enum custom_keycodes {
+  G_I18N         = LT(LAYER_I18N, KC_G), // QWERTY & Workman
+  H_I18N         = LT(LAYER_I18N, KC_H), // QWERTY
+  Y_I18N         = LT(LAYER_I18N, KC_Y), // Workman
   F_CTRL         = LCTL_T(KC_F), // QWERTY
   T_CTRL         = LCTL_T(KC_T), // Workman
   J_CTRL         = RCTL_T(KC_J), // QWERTY
@@ -57,12 +60,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_QWERTY] = LAYOUT_ergodox_pretty(
     TG(LAYER_WORKMAN), KC_NO,       KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_PSCREEN,
     KC_NO,          KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_NO,                                          KC_NO,          KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_NO,
-    KC_NO,          A_ALT,          S_GUI,          D_SHIFT,        F_CTRL,         KC_G,                                                                           KC_H,           J_CTRL,         K_SHIFT,        L_GUI,          SCOLON_ALT,     KC_NO,
+    KC_NO,          A_ALT,          S_GUI,          D_SHIFT,        F_CTRL,         G_I18N,                                                                         H_I18N,         J_CTRL,         K_SHIFT,        L_GUI,          SCOLON_ALT,     KC_NO,
     KC_NO,          KC_Z,           KC_X,           KC_C,           KC_V,           KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_M,           KC_COMMA,       KC_DOT,         KC_SLASH,       KC_NO,
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_B,                                                                                                           KC_N,           KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                                     KC_NO,          KC_NO,
-                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    ESCAPE_I18N,    DELETE_I18N,    ENTER_NUMBERS,  SPACE_SYMBOLS
+                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    KC_ESCAPE,      KC_DELETE,      ENTER_NUMBERS,  SPACE_SYMBOLS
   ),
   
 
@@ -102,12 +105,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_WORKMAN] = LAYOUT_ergodox_pretty(
     KC_TRANSPARENT, KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_PSCREEN,
     KC_NO,          KC_Q,           KC_D,           KC_R,           KC_W,           KC_B,           KC_NO,                                          KC_NO,          KC_J,           KC_F,           KC_U,           KC_P,           KC_SCOLON,      KC_NO,
-    KC_NO,          A_ALT,          S_GUI,          H_SHIFT,        T_CTRL,         KC_G,                                                                           KC_Y,           N_CTRL,         E_SHIFT,        O_GUI,          I_ALT,          KC_NO,
+    KC_NO,          A_ALT,          S_GUI,          H_SHIFT,        T_CTRL,         G_I18N,                                                                         Y_I18N,         N_CTRL,         E_SHIFT,        O_GUI,          I_ALT,          KC_NO,
     KC_NO,          KC_Z,           KC_X,           KC_M,           KC_C,           KC_NO,          KC_NO,                                          KC_NO,          KC_NO,          KC_L,           KC_COMMA,       KC_DOT,         KC_SLASH,       KC_NO,
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_V,                                                                                                           KC_K,           KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                                     KC_NO,          KC_NO,
-                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    ESCAPE_I18N,    DELETE_I18N,    ENTER_NUMBERS,  SPACE_SYMBOLS
+                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    KC_ESCAPE,      KC_DELETE,      ENTER_NUMBERS,  SPACE_SYMBOLS
   ),
 };
 
