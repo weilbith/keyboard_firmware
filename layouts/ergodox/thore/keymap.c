@@ -1,4 +1,5 @@
 #include QMK_KEYBOARD_H
+#include "thore.h"
 #include "print.h"
 
 enum layer_names {
@@ -37,6 +38,20 @@ enum custom_keycodes {
   KC_EURO        = RALT(KC_5),
 };
 
+enum tab_dance_codes {
+  PARENTS = 0,
+  SQUARES,
+  CURLY,
+  ANGLES,
+};
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+  [PARENTS] = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_PAREN, KC_RIGHT_PAREN),
+  [SQUARES] = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LBRACKET, KC_RBRACKET),
+  [CURLY]   = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_CURLY_BRACE, KC_RIGHT_CURLY_BRACE),
+  [ANGLES]  = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_ANGLE_BRACKET, KC_RIGHT_ANGLE_BRACKET),
+};
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_QWERTY] = LAYOUT_ergodox_pretty(
@@ -54,7 +69,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_SYMBOLS] = LAYOUT_ergodox_pretty(
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
     KC_TRANSPARENT, KC_EXCLAIM,     KC_AT,          KC_HASH,        KC_DOLLAR,      KC_PERCENT,     KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_CIRCUMFLEX,  KC_AMPERSAND,   KC_ASTERISK,    KC_KP_MINUS,    KC_UNDERSCORE,  KC_TRANSPARENT,
-    KC_TRANSPARENT, KC_GRAVE,       KC_LCBR,        KC_LBRACKET,    KC_LEFT_PAREN,  KC_LABK,                                                                        KC_RABK,        KC_RIGHT_PAREN, KC_RBRACKET,    KC_RCBR,        KC_COLON,       KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_GRAVE,       TD(CURLY),      TD(SQUARES),    TD(PARENTS),    TD(ANGLES),                                                                     KC_RABK,        KC_RIGHT_PAREN, KC_RBRACKET,    KC_RCBR,        KC_COLON,       KC_TRANSPARENT,
     KC_TRANSPARENT, KC_TILDE,       KC_PIPE,        KC_BSLASH,      KC_QUOTE,       KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_DOUBLE_QUOTE,KC_PLUS,        KC_EQUAL,       KC_QUESTION,    KC_TRANSPARENT,
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
                                                                                                     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
