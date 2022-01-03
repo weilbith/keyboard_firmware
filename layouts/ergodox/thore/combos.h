@@ -16,7 +16,7 @@ const uint16_t PROGMEM escape_combo[]         = { S_GUI, D_SHIFT, COMBO_END };
 const uint16_t PROGMEM angle_bracket_combo[]  = { KC_LEFT_PAREN, KC_LEFT_ANGLE_BRACKET, COMBO_END };
 const uint16_t PROGMEM parentheses_combo[]    = { KC_LEFT_BRACKET, KC_LEFT_PAREN, COMBO_END };
 const uint16_t PROGMEM bracket_combo[]        = { KC_LEFT_CURLY_BRACE, KC_LEFT_BRACKET, COMBO_END };
-const uint16_t PROGMEM curly_braces_combo[]   = { KC_COLON, KC_LEFT_CURLY_BRACE, COMBO_END };
+const uint16_t PROGMEM curly_braces_combo[]   = { KC_PIPE, KC_LEFT_CURLY_BRACE, COMBO_END };
 
 // TODO: Why does this not work?
 // uint16_t COMBO_LEN = LAST_COMBO_INDEX;
