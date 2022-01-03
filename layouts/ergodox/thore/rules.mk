@@ -1,4 +1,4 @@
-USER_DANCING_BRACKETS_ENABLE = yes
+USER_DANCING_BRACKETS_ENABLE = no
 USER_BACKLIGHT_ENABLE = no
 
 # Explicitly disable all not used features to reduce size.

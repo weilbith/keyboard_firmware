@@ -4,7 +4,7 @@
 #include "layer_names.h"
 #include "custom_keycodes.h"
 #include "key_overrides.h"
-#include "tap_dance.h"
+// #include "tap_dance.h"
 #include "combos.h"
 #include "layout.h"
 
@@ -23,15 +23,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   
 
   [LAYER_SYMBOLS] = LAYOUT_ergodox_34_keys(
-    KC_EXCLAIM,     KC_AT,          KC_HASH,        KC_DOLLAR,      KC_PERCENT,
-    KC_GRAVE,       TD(CURLY),      TD(SQUARES),    TD(PARENTS),    TD(ANGLES),
-    KC_TILDE,       KC_PIPE,        KC_BSLASH,      KC_QUOTE,
-                                    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+    KC_EXCLAIM,     KC_AT,                KC_HASH,          KC_DOLLAR,      KC_PERCENT,
+    KC_COLON,       KC_LEFT_CURLY_BRACE,  KC_LEFT_BRACKET,  KC_LEFT_PAREN,  KC_LEFT_ANGLE_BRACKET,
+    KC_TILDE,       KC_PIPE,              KC_BSLASH,        KC_QUOTE,
+                                          KC_TRANSPARENT,   KC_TRANSPARENT, KC_TRANSPARENT,
 
-    KC_CIRCUMFLEX,  KC_AMPERSAND,   KC_ASTERISK,    KC_KP_MINUS,    KC_UNDERSCORE, 
-    KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_COLON,
-                    KC_NO,          KC_PLUS,        KC_EQUAL,       KC_QUESTION,
-    KC_DOUBLE_QUOTE,KC_QUOTE,       KC_GRAVE
+    KC_CIRCUMFLEX,  KC_AMPERSAND,         KC_ASTERISK,      KC_KP_MINUS,    KC_UNDERSCORE, 
+    KC_NO,          KC_NO,                KC_NO,            KC_NO,          KC_COLON,
+                    KC_NO,                KC_PLUS,          KC_EQUAL,       KC_QUESTION,
+    KC_DOUBLE_QUOTE,KC_QUOTE,             KC_GRAVE
   ),
 
   [LAYER_NUMBERS] = LAYOUT_ergodox_34_keys(
