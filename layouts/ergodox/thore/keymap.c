@@ -47,6 +47,21 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [ANGLES]  = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_ANGLE_BRACKET, KC_RIGHT_ANGLE_BRACKET),
 };
 
+// COMBOS
+
+enum combos {
+  ESC_COMBO_CODE,
+  LAST_COMBO_INDEX,
+};
+
+const uint16_t PROGMEM esc_combo[] = {S_GUI, D_SHIFT, COMBO_END};
+
+// TODO: Why does this not work?
+// uint16_t COMBO_LEN = LAST_COMBO_INDEX;
+// combo_t key_combos[] = {
+combo_t key_combos[COMBO_COUNT] = {
+  [ESC_COMBO_CODE] = COMBO(esc_combo, KC_ESCAPE),
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_BASE] = LAYOUT_ergodox_pretty(
@@ -57,7 +72,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_B,                                                                                                           KC_N,           KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                                     KC_NO,          KC_NO,
-                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    KC_ESCAPE,      KC_DELETE,      ENTER_NUMBERS,  SPACE_SYMBOLS
+                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    KC_NO,          KC_DELETE,      ENTER_NUMBERS,  SPACE_SYMBOLS
   ),
   
 

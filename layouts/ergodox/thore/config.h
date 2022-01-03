@@ -15,3 +15,6 @@
 #undef NO_ACTION_LAYER
 #undef NO_ACTION_TAPPING
 #undef NO_ACTION_ONESHOT
+
+#define COMBO_COUNT 1
+#define COMBO_TERM 30
