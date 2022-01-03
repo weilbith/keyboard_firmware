@@ -21,7 +21,7 @@ enum custom_keycodes {
   A_ALT          = LALT_T(KC_A),
   SCOLON_ALT     = LALT_T(KC_SCOLON),
   SPACE_SYMBOLS  = LT(LAYER_SYMBOLS, KC_SPACE),
-  BSPACE_SYMBOLS = LT(LAYER_SYMBOLS, KC_BSPACE),
+  BSPACE_SYMBOLS = LT(LAYER_SYMBOLS, KC_BACKSPACE),
   ENTER_NUMBERS  = LT(LAYER_NUMBERS, KC_ENTER),
   TAB_NUMBERS    = LT(LAYER_NUMBERS, KC_TAB),
   ESCAPE_I18N    = LT(LAYER_I18N, KC_ESCAPE),
@@ -42,9 +42,18 @@ enum tab_dance_codes {
 
 qk_tap_dance_action_t tap_dance_actions[] = {
   [PARENTS] = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_PAREN, KC_RIGHT_PAREN),
-  [SQUARES] = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LBRACKET, KC_RBRACKET),
+  [SQUARES] = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_BRACKET, KC_RBRACKET),
   [CURLY]   = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_CURLY_BRACE, KC_RIGHT_CURLY_BRACE),
   [ANGLES]  = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_ANGLE_BRACKET, KC_RIGHT_ANGLE_BRACKET),
+};
+
+// OVERRIDES
+
+const key_override_t override_shift_backspace = ko_make_basic(MOD_MASK_SHIFT, BSPACE_SYMBOLS, KC_DELETE);
+
+const key_override_t **key_overrides = (const key_override_t *[]){
+    &override_shift_backspace,
+    NULL,
 };
 
 // COMBOS
@@ -72,7 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_B,                                                                                                           KC_N,           KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,
                                                                                                                     KC_NO,          KC_NO,
-                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    KC_NO,          KC_DELETE,      ENTER_NUMBERS,  SPACE_SYMBOLS
+                                                                                    BSPACE_SYMBOLS, TAB_NUMBERS,    KC_NO,          KC_NO,          ENTER_NUMBERS,  SPACE_SYMBOLS
   ),
   
 
