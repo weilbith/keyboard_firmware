@@ -16,3 +16,16 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [CURLY]   = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_CURLY_BRACE, KC_RIGHT_CURLY_BRACE),
   [ANGLES]  = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_ANGLE_BRACKET, KC_RIGHT_ANGLE_BRACKET),
 };
+
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case TD(PARENTS):
+    case TD(SQUARES):
+    case TD(CURLY):
+    case TD(ANGLES):
+        return TAPPING_TERM_DANCING_BRACKETS;
+
+    default:
+        return TAPPING_TERM;
+  }
+}
