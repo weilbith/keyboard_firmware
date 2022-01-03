@@ -1,76 +1,11 @@
 #include QMK_KEYBOARD_H
 #include "thore.h"
 #include "print.h"
-
-enum layer_names {
-  LAYER_BASE = 0,
-  LAYER_SYMBOLS,
-  LAYER_NUMBERS,
-  LAYER_I18N,
-};
-
-enum custom_keycodes {
-  G_I18N         = LT(LAYER_I18N, KC_G),
-  H_I18N         = LT(LAYER_I18N, KC_H),
-  F_CTRL         = LCTL_T(KC_F),
-  J_CTRL         = RCTL_T(KC_J),
-  D_SHIFT        = LSFT_T(KC_D),
-  K_SHIFT        = RSFT_T(KC_K),
-  S_GUI          = LGUI_T(KC_S),
-  L_GUI          = RGUI_T(KC_L),
-  A_ALT          = LALT_T(KC_A),
-  SCOLON_ALT     = LALT_T(KC_SCOLON),
-  SPACE_SYMBOLS  = LT(LAYER_SYMBOLS, KC_SPACE),
-  BSPACE_SYMBOLS = LT(LAYER_SYMBOLS, KC_BACKSPACE),
-  ENTER_NUMBERS  = LT(LAYER_NUMBERS, KC_ENTER),
-  TAB_NUMBERS    = LT(LAYER_NUMBERS, KC_TAB),
-  ESCAPE_I18N    = LT(LAYER_I18N, KC_ESCAPE),
-  DELETE_I18N    = LT(LAYER_I18N, KC_DELETE),
-  KC_AE          = RALT(KC_Q),
-  KC_OE          = RALT(KC_P),
-  KC_UE          = RALT(KC_Y),
-  KC_SZ          = RALT(KC_S),
-  KC_EURO        = RALT(KC_5),
-};
-
-enum tab_dance_codes {
-  PARENTS = 0,
-  SQUARES,
-  CURLY,
-  ANGLES,
-};
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-  [PARENTS] = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_PAREN, KC_RIGHT_PAREN),
-  [SQUARES] = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_BRACKET, KC_RBRACKET),
-  [CURLY]   = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_CURLY_BRACE, KC_RIGHT_CURLY_BRACE),
-  [ANGLES]  = ACTION_TAP_DANCE_DANCING_BRACKET(KC_LEFT_ANGLE_BRACKET, KC_RIGHT_ANGLE_BRACKET),
-};
-
-// OVERRIDES
-
-const key_override_t override_shift_backspace = ko_make_basic(MOD_MASK_SHIFT, BSPACE_SYMBOLS, KC_DELETE);
-
-const key_override_t **key_overrides = (const key_override_t *[]){
-    &override_shift_backspace,
-    NULL,
-};
-
-// COMBOS
-
-enum combos {
-  ESC_COMBO_CODE,
-  LAST_COMBO_INDEX,
-};
-
-const uint16_t PROGMEM esc_combo[] = {S_GUI, D_SHIFT, COMBO_END};
-
-// TODO: Why does this not work?
-// uint16_t COMBO_LEN = LAST_COMBO_INDEX;
-// combo_t key_combos[] = {
-combo_t key_combos[COMBO_COUNT] = {
-  [ESC_COMBO_CODE] = COMBO(esc_combo, KC_ESCAPE),
-};
+#include "layer_names.h"
+#include "custom_keycodes.h"
+#include "key_overrides.h"
+#include "tap_dance.h"
+#include "combos.h"
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_BASE] = LAYOUT_ergodox_pretty(
@@ -90,10 +25,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRANSPARENT, KC_EXCLAIM,     KC_AT,          KC_HASH,        KC_DOLLAR,      KC_PERCENT,     KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_CIRCUMFLEX,  KC_AMPERSAND,   KC_ASTERISK,    KC_KP_MINUS,    KC_UNDERSCORE,  KC_TRANSPARENT,
     KC_TRANSPARENT, KC_GRAVE,       TD(CURLY),      TD(SQUARES),    TD(PARENTS),    TD(ANGLES),                                                                     KC_NO,          KC_NO,          KC_NO,          KC_NO,          KC_COLON,       KC_TRANSPARENT,
     KC_TRANSPARENT, KC_TILDE,       KC_PIPE,        KC_BSLASH,      KC_QUOTE,       KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_DOUBLE_QUOTE,KC_PLUS,        KC_EQUAL,       KC_QUESTION,    KC_TRANSPARENT,
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                                                                                 KC_GRAVE,       KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
                                                                                                     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
                                                                                                                     KC_TRANSPARENT, KC_TRANSPARENT,
-                                                                                    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
+                                                                                    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_DOUBLE_QUOTE,KC_QUOTE
   ),
 
   [LAYER_NUMBERS] = LAYOUT_ergodox_pretty(
