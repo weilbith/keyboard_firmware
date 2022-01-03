@@ -13,5 +13,3 @@ AUDIO_ENABLE = no
 RGBLIGHT_ENABLE = no
 LEADER_ENABLE = no
 LTO_ENABLE = yes
-
-VPATH += keyboards/gboards/
