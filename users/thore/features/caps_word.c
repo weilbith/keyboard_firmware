@@ -1,4 +1,5 @@
 #include "caps_word.h"
+#include "key_utilities.h"
 
 bool caps_word_enabled = false;
 
@@ -12,33 +13,8 @@ bool both_shift_keys_are_pressed(void) {
   return (active_modifier & MOD_MASK_SHIFT) == MOD_MASK_SHIFT;
 }
 
-bool is_key_press_event(keyrecord_t* record) {
-  return record->event.pressed;
-}
-
-bool is_tap_or_hold_keycode(uint16_t keycode) {
-  switch(keycode) {
-    case QK_MOD_TAP ... QK_MOD_TAP_MAX:
-    case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
-      return true;
-
-    default:
-      return false;
-  }
-}
-
-bool tap_or_hold_key_got_tapped(keyrecord_t* record) {
-  return record->tap.count > 0;
-}
-
 bool is_shifted_caps_word_keycode(uint16_t keycode) {
-  switch (keycode) {
-    case KC_A ... KC_Z:
-      return true;
-
-    default:
-      return false;
-  }
+  return is_alphabetical_keycode(keycode);
 }
 
 bool is_not_shifted_caps_word_keycode(uint16_t keycode) {
@@ -58,17 +34,11 @@ bool is_caps_word_keycode(uint16_t keycode) {
 }
 
 void handle_caps_word(uint16_t keycode, keyrecord_t* record) {
-  if (!is_key_press_event(record)) {
+  if (!key_got_tapped(keycode, record)) {
     return;
   }
 
-  if (is_tap_or_hold_keycode(keycode)) {
-    if (tap_or_hold_key_got_tapped(record)) {
-      keycode &= 0xff;
-    } else {
-      return;
-    }
-  }
+  keycode = parse_possible_tap_or_hold_keycode(keycode);
 
   if (!is_caps_word_keycode(keycode)) {
     caps_word_enabled = false;

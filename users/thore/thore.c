@@ -14,5 +14,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     }
   #endif
 
+  #ifdef USER_DOUBLE_SPACE_SENTENCE_ENABLE
+    if (!possibly_process_double_space_sentence(keycode, record)) {
+      return false;
+    }
+  #endif
+
   return true;
 }

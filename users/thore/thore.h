@@ -11,3 +11,7 @@
 #ifdef USER_CAPS_WORD_ENABLE
   #include "features/caps_word.h"
 #endif
+
+#ifdef USER_DOUBLE_SPACE_SENTENCE_ENABLE
+  #include "features/double_space_sentence.h"
+#endif
