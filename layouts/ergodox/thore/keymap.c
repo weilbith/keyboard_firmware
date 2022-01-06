@@ -17,7 +17,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,
     H_I18N,         J_CTRL,         K_SHIFT,        L_GUI,          SCOLON_ALT,
-                    KC_M,           KC_COMMA,       KC_DOT,         KC_QUESTION,
+                    KC_M,           KC_COMMA,       KC_DOT,         KC_KP_SLASH,
     ENTER_FUNCTIONS,SPACE_SYMBOLS,  KC_N
   ),
   
@@ -31,7 +31,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_NUMBERS] = LAYOUT_ergodox_34_keys_right_hand(
     KC_KP_PLUS,     KC_4,                 KC_5,             KC_6,           KC_KP_ASTERISK, 
     KC_0,           KC_1,                 KC_2,             KC_3,           KC_COLON,
-                    KC_7,                 KC_8,             KC_9,           KC_KP_SLASH,
+                    KC_7,                 KC_8,             KC_9,           KC_QUESTION,
     KC_DOUBLE_QUOTE,KC_QUOTE,             KC_GRAVE
   ),
 
