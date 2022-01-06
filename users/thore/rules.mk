@@ -11,3 +11,8 @@ ifeq ($(strip $(USER_BACKLIGHT_ENABLE)), yes)
 	SRC += features/backlight.c
   OPT_DEFS += -DUSER_BACKLIGHT_ENABLE
 endif
+
+ifeq ($(strip $(USER_CAPS_WORD_ENABLE)), yes)
+	SRC += features/caps_word.c
+  OPT_DEFS += -DUSER_CAPS_WORD_ENABLE
+endif

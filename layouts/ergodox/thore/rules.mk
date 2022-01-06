@@ -1,5 +1,6 @@
 USER_DANCING_BRACKETS_ENABLE = no
 USER_BACKLIGHT_ENABLE = no
+USER_CAPS_WORD_ENABLE = yes
 
 # Explicitly disable all not used features to reduce size.
 BOOTMAGIC_ENABLE = no
