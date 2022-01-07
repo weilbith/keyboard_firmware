@@ -16,5 +16,4 @@
 #undef NO_ACTION_TAPPING
 #undef NO_ACTION_ONESHOT
 
-#define COMBO_COUNT 5
 #define COMBO_TERM 30
