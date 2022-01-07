@@ -4,7 +4,7 @@
 #include "layer_names.h"
 #include "custom_keycodes.h"
 #include "key_overrides.h"
-// #include "tap_dance.h"
+#include "tap_dance.h"
 #include "combos.h"
 #include "layout.h"
 
@@ -23,7 +23,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   
   [LAYER_SYMBOLS] = LAYOUT_ergodox_34_keys_left_hand(
     KC_EXCLAIM,     KC_AT,                KC_HASH,          KC_DOLLAR,      KC_PERCENT,
-    KC_PIPE,        KC_LEFT_CURLY_BRACE,  KC_LEFT_BRACKET,  KC_LEFT_PAREN,  KC_LEFT_ANGLE_BRACKET,
+    KC_PIPE,        TD(CURLY_BRACES),     TD(BRACKETS),     TD(PARENTHESES),TD(ANGLE_BRACKETS),
     KC_BACKSLASH,   KC_AMPERSAND,         KC_CIRCUMFLEX,    KC_TILDE,
                                           KC_KP_EQUAL,      KC_UNDERSCORE,  KC_KP_MINUS
   ),
